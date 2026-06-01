@@ -1,4 +1,5 @@
 import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 import { withAuth } from '@/middleware/auth.middleware';
 import { userRepository } from '@/repositories/user.repository';
 import { successResponse, errorResponse, serverErrorResponse } from '@/utils/response';
@@ -23,7 +24,7 @@ export const POST = withAuth(async (req: AuthReq) => {
     const body = await req.json();
     const result = schema.safeParse(body);
     if (!result.success) {
-      return errorResponse(result.error.errors[0].message, 422);
+      return NextResponse.json({ success: false, message: result.error.errors[0].message }, { status: 422 });
     }
     const { currentPassword, newPassword } = result.data;
 
