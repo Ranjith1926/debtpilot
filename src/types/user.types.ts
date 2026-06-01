@@ -25,7 +25,7 @@ export interface AuthState {
 }
 
 export interface LoginPayload {
-  phone: string;
+  email: string;
   password: string;
 }
 

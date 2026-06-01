@@ -21,11 +21,11 @@ export default function LoginScreen() {
 
   const { control, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { phone: '+919876543210', password: 'Password123' },
+    defaultValues: { email: '', password: '' },
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    const result = await login(data);
+    const result = await login({ email: data.email, password: data.password });
     if (result.meta.requestStatus === 'fulfilled') {
       router.replace('/(tabs)/dashboard');
     }
@@ -90,17 +90,18 @@ export default function LoginScreen() {
 
             <Controller
               control={control}
-              name="phone"
+              name="email"
               render={({ field: { onChange, value, onBlur } }) => (
                 <CustomInput
-                  label="Phone Number"
-                  placeholder="+91 98765 43210"
-                  leftIcon="call-outline"
-                  keyboardType="phone-pad"
+                  label="Email"
+                  placeholder="your@email.com"
+                  leftIcon="mail-outline"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
-                  error={errors.phone?.message}
+                  error={errors.email?.message}
                   isRequired
                 />
               )}

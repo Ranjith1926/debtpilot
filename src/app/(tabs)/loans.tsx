@@ -10,6 +10,7 @@ import { textVariants } from '@theme/typography';
 import { spacing, borderRadius } from '@theme/spacing';
 import { formatCurrency } from '@utils/format';
 import { LoanSummaryCard, FloatingActionButton, EmptyState, CardSkeleton } from '@components/ui/index';
+import { useTranslation } from 'react-i18next';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const TAB_BAR_HEIGHT = Platform.OS === 'ios' ? 82 : 62;
@@ -24,6 +25,7 @@ const FILTER_TABS = [
 
 export default function LoansScreen() {
   const { theme, isDark } = useTheme();
+  const { t } = useTranslation();
   const { data: loansData, isLoading, refetch } = useLoans();
   const [activeFilter, setActiveFilter] = useState('all');
 
@@ -42,7 +44,7 @@ export default function LoansScreen() {
       {/* Header */}
       <MotiView from={{ opacity: 0 }} animate={{ opacity: 1 }} style={styles.header}>
         <View style={styles.headerLeft}>
-          <Text style={[textVariants.headlineLarge, { color: theme.colors.textPrimary }]}>My Loans</Text>
+          <Text style={[textVariants.headlineLarge, { color: theme.colors.textPrimary }]}>{t('loans.title')}</Text>
           <Text style={[textVariants.bodySmall, { color: theme.colors.textSecondary, marginTop: 2 }]}>
             {loans.length} active · {formatCurrency(totalOutstanding, true)} outstanding
           </Text>
@@ -110,9 +112,9 @@ export default function LoansScreen() {
       ) : filteredLoans.length === 0 ? (
         <EmptyState
           icon="card-outline"
-          title="No loans found"
-          subtitle="Add your first loan to start tracking"
-          actionLabel="Add Loan"
+          title={t('loans.noLoans')}
+          subtitle={t('loans.noLoansSubtext')}
+          actionLabel={t('loans.addLoan')}
           onAction={() => router.push('/loan/add')}
         />
       ) : (

@@ -21,6 +21,15 @@ dist/
 android/
 ios/
 
+# Next.js
+backend/.next/
+backend/node_modules/
+
+# Secrets
+backend/.env
+backend/.env.local
+google-services.json
+
 # Logs
 *.log
 npm-debug.log*

@@ -18,12 +18,14 @@ import {
   EMIListCard, InsightCard, FloatingActionButton,
   CardSkeleton, StatsSkeleton,
 } from '@components/ui/index';
+import { useTranslation } from 'react-i18next';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const TAB_BAR_HEIGHT = Platform.OS === 'ios' ? 82 : 62;
 
 export default function DashboardScreen() {
   const { theme, isDark } = useTheme();
+  const { t } = useTranslation();
   const user = useAppSelector((s) => s.auth.user);
   const { data: summary, isLoading: summaryLoading, refetch: refetchSummary } = useLoanSummary();
   const { data: emis, isLoading: emisLoading, refetch: refetchEMIs } = useUpcomingEMIs();
@@ -42,10 +44,10 @@ export default function DashboardScreen() {
   const upcomingEMIs = emis?.data?.slice(0, 3) ?? [];
 
   const quickActions = [
-    { label: 'Add Loan', icon: 'add-circle' as const, route: '/loan/add', gradient: theme.gradients.primary },
-    { label: 'Analytics', icon: 'bar-chart' as const, route: '/(tabs)/analytics', gradient: theme.gradients.cyan },
-    { label: 'Insights', icon: 'bulb' as const, route: '/ai-insights', gradient: theme.gradients.success },
-    { label: 'Reminders', icon: 'notifications' as const, route: '/reminders', gradient: theme.gradients.gold },
+    { label: t('loans.addLoan'), icon: 'add-circle' as const, route: '/loan/add', gradient: theme.gradients.primary },
+    { label: t('analytics.title'), icon: 'bar-chart' as const, route: '/(tabs)/analytics', gradient: theme.gradients.cyan },
+    { label: t('insights.title'), icon: 'bulb' as const, route: '/ai-insights', gradient: theme.gradients.success },
+    { label: t('reminders.title'), icon: 'notifications' as const, route: '/reminders', gradient: theme.gradients.gold },
   ];
 
   const bgColors = isDark
@@ -71,7 +73,7 @@ export default function DashboardScreen() {
         <MotiView from={{ opacity: 0, translateY: -20 }} animate={{ opacity: 1, translateY: 0 }} style={styles.header}>
           <View style={styles.headerLeft}>
             <Text style={[textVariants.bodyMedium, { color: theme.colors.textSecondary }]}>
-              {getGreeting()},
+              {(() => { const h = new Date().getHours(); return `${t('dashboard.greeting')} ${h < 12 ? t('dashboard.morning') : h < 17 ? t('dashboard.afternoon') : t('dashboard.evening')}`; })()},
             </Text>
             <Text style={[textVariants.headlineLarge, { color: theme.colors.textPrimary }]}>
               {user?.name?.split(' ')[0] ?? 'User'} 👋
@@ -108,20 +110,20 @@ export default function DashboardScreen() {
           <LinearGradient colors={heroColors} style={[styles.heroCard, { borderColor: theme.colors.cardBorder, borderWidth: 1 }]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
             <View style={styles.heroContent}>
               <View style={styles.heroLeft}>
-                <Text style={[textVariants.labelMedium, { color: theme.colors.textSecondary }]}>Total Outstanding</Text>
+                <Text style={[textVariants.labelMedium, { color: theme.colors.textSecondary }]}>{t('dashboard.totalOutstanding')}</Text>
                 <Text style={[textVariants.amountLarge, { color: theme.colors.textPrimary, marginTop: spacing[1], fontSize: Math.min(36, SCREEN_WIDTH * 0.09) }]}>
                   {summaryLoading ? '—' : formatCurrency(summary?.totalOutstanding ?? 0, true)}
                 </Text>
                 <View style={styles.heroStats}>
                   <View>
-                    <Text style={[textVariants.caption, { color: theme.colors.textSecondary }]}>Monthly EMI</Text>
+                    <Text style={[textVariants.caption, { color: theme.colors.textSecondary }]}>{t('dashboard.monthlyEMI')}</Text>
                     <Text style={[textVariants.titleLarge, { color: theme.colors.textPrimary, fontWeight: '700' }]}>
                       {summaryLoading ? '—' : formatCurrency(summary?.totalEMIPerMonth ?? 0)}
                     </Text>
                   </View>
                   <View style={styles.heroDivider} />
                   <View>
-                    <Text style={[textVariants.caption, { color: theme.colors.textSecondary }]}>Next Due</Text>
+                    <Text style={[textVariants.caption, { color: theme.colors.textSecondary }]}>{t('dashboard.nextDue')}</Text>
                     <Text style={[textVariants.titleLarge, { color: theme.colors.warning, fontWeight: '700' }]}>
                       {summaryLoading ? '—' : formatDateShort(summary?.nextEMIDue ?? '')}
                     </Text>
@@ -166,7 +168,7 @@ export default function DashboardScreen() {
         {/* Quick Actions */}
         <MotiView from={{ opacity: 0, translateY: 16 }} animate={{ opacity: 1, translateY: 0 }} transition={{ delay: 280 }}>
           <Text style={[textVariants.headlineSmall, { color: theme.colors.textPrimary, marginBottom: spacing[3] }]}>
-            Quick Actions
+            {t('dashboard.quickActions')}
           </Text>
           <View style={styles.quickActions}>
             {quickActions.map((action) => (
@@ -185,9 +187,9 @@ export default function DashboardScreen() {
         {/* Upcoming EMIs */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={[textVariants.headlineSmall, { color: theme.colors.textPrimary }]}>Upcoming EMIs</Text>
+            <Text style={[textVariants.headlineSmall, { color: theme.colors.textPrimary }]}>{t('dashboard.upcomingEMIs')}</Text>
             <TouchableOpacity onPress={() => router.push('/(tabs)/loans')}>
-              <Text style={[textVariants.labelMedium, { color: theme.colors.primary }]}>See All</Text>
+              <Text style={[textVariants.labelMedium, { color: theme.colors.primary }]}>{t('common.seeAll')}</Text>
             </TouchableOpacity>
           </View>
           {emisLoading ? (
@@ -208,9 +210,9 @@ export default function DashboardScreen() {
         {insights.length > 0 && (
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
-              <Text style={[textVariants.headlineSmall, { color: theme.colors.textPrimary }]}>AI Insights</Text>
+              <Text style={[textVariants.headlineSmall, { color: theme.colors.textPrimary }]}>{t('dashboard.aiInsights')}</Text>
               <TouchableOpacity onPress={() => router.push('/ai-insights')}>
-                <Text style={[textVariants.labelMedium, { color: theme.colors.primary }]}>See All</Text>
+                <Text style={[textVariants.labelMedium, { color: theme.colors.primary }]}>{t('common.seeAll')}</Text>
               </TouchableOpacity>
             </View>
             {insights.map((insight, i) => (

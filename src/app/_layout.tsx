@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -8,6 +8,8 @@ import { StyleSheet } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import { store } from '@store/index';
 import { ThemeProvider, useTheme } from '@theme/ThemeProvider';
+import { useAppSelector } from '@store/hooks';
+import { FCMService } from '@services/fcm.service';
 import '../localization/i18n';
 
 SplashScreen.preventAutoHideAsync();
@@ -21,10 +23,22 @@ const queryClient = new QueryClient({
 
 function RootLayoutInner() {
   const { isDark } = useTheme();
+  const isAuthenticated = useAppSelector((s) => s.auth.isAuthenticated);
+  const fcmRegistered = useRef(false);
 
   useEffect(() => {
     SplashScreen.hideAsync();
   }, []);
+
+  useEffect(() => {
+    if (isAuthenticated && !fcmRegistered.current) {
+      fcmRegistered.current = true;
+      FCMService.registerDeviceToken();
+    }
+    if (!isAuthenticated) {
+      fcmRegistered.current = false;
+    }
+  }, [isAuthenticated]);
 
   return (
     <>

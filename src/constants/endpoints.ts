@@ -8,6 +8,7 @@ export const ENDPOINTS = {
     LOGOUT: '/auth/logout',
     FORGOT_PASSWORD: '/auth/forgot-password',
     RESET_PASSWORD: '/auth/reset-password',
+    CHANGE_PASSWORD: '/auth/change-password',
   },
   USER: {
     ME: '/user/me',
@@ -15,6 +16,7 @@ export const ENDPOINTS = {
     UPDATE_PREFERENCES: '/user/preferences',
     UPLOAD_AVATAR: '/user/avatar',
     DELETE_ACCOUNT: '/user/delete',
+    DEVICE_TOKEN: '/user/device-token',
   },
   LOANS: {
     LIST: '/loans',
@@ -29,8 +31,9 @@ export const ENDPOINTS = {
     LIST: '/emis',
     UPCOMING: '/emis/upcoming',
     CALENDAR: '/emis/calendar',
-    MARK_PAID: (id: string) => `/emis/${id}/pay`,
-    HISTORY: '/emis/history',
+    MARK_PAID: (_id: string) => `/emis/pay`,
+    PAY: '/emis/pay',
+    HISTORY: '/emis',
   },
   ANALYTICS: {
     OVERVIEW: '/analytics/overview',
@@ -50,8 +53,8 @@ export const ENDPOINTS = {
   },
   NOTIFICATIONS: {
     LIST: '/notifications',
-    MARK_READ: (id: string) => `/notifications/${id}/read`,
+    MARK_READ: (_id: string) => `/notifications`,
     MARK_ALL_READ: '/notifications/read-all',
-    CLEAR: '/notifications/clear',
+    CLEAR: '/notifications',
   },
 } as const;

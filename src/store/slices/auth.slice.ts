@@ -54,22 +54,23 @@ const authSlice = createSlice({
       .addCase(loginAsync.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload.user;
-        state.accessToken = action.payload.accessToken;
-        state.refreshToken = action.payload.refreshToken;
+        state.accessToken = action.payload.tokens.accessToken;
+        state.refreshToken = action.payload.tokens.refreshToken;
         state.isAuthenticated = true;
       })
       .addCase(loginAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       })
-      .addCase(verifyOTPAsync.pending, (state) => { state.isLoading = true; state.error = null; })
-      .addCase(verifyOTPAsync.fulfilled, (state, action) => {
+      .addCase(registerAsync.pending, (state) => { state.isLoading = true; state.error = null; })
+      .addCase(registerAsync.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload.user;
-        state.accessToken = action.payload.accessToken;
+        state.accessToken = action.payload.tokens.accessToken;
+        state.refreshToken = action.payload.tokens.refreshToken;
         state.isAuthenticated = true;
       })
-      .addCase(verifyOTPAsync.rejected, (state, action) => {
+      .addCase(registerAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       })

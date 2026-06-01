@@ -11,16 +11,28 @@ import { textVariants } from '@theme/typography';
 import { spacing, borderRadius } from '@theme/spacing';
 import { registerSchema, RegisterFormData } from '@utils/validation';
 import { CustomInput, GradientButton } from '@components/ui/index';
+import { useAppDispatch, useAppSelector } from '@store/hooks';
+import { registerAsync } from '@store/slices/auth.slice';
 
 export default function RegisterScreen() {
   const { theme, isDark } = useTheme();
+  const dispatch = useAppDispatch();
+  const { isLoading, error } = useAppSelector((s) => s.auth);
 
   const { control, handleSubmit, formState: { errors } } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = (data: RegisterFormData) => {
-    router.push({ pathname: '/(auth)/otp', params: { phone: data.phone } });
+  const onSubmit = async (data: RegisterFormData) => {
+    const result = await dispatch(registerAsync({
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      password: data.password,
+    }));
+    if (result.meta.requestStatus === 'fulfilled') {
+      router.replace('/(tabs)/dashboard');
+    }
   };
 
   const bgColors = isDark
@@ -62,6 +74,15 @@ export default function RegisterScreen() {
           transition={{ delay: 200 }}
           style={styles.form}
         >
+          {error && (
+            <View style={[styles.errorBanner, { backgroundColor: 'rgba(239,68,68,0.10)', borderColor: 'rgba(239,68,68,0.25)', borderWidth: 1 }]}>
+              <Ionicons name="alert-circle" size={16} color={theme.colors.error} />
+              <Text style={[textVariants.bodySmall, { color: theme.colors.error, marginLeft: spacing[2], flex: 1 }]}>
+                {error}
+              </Text>
+            </View>
+          )}
+
           <Controller
             control={control} name="name"
             render={({ field: { onChange, value, onBlur } }) => (
@@ -98,7 +119,7 @@ export default function RegisterScreen() {
             )}
           />
 
-          <GradientButton title="Create Account" onPress={handleSubmit(onSubmit)} style={{ marginTop: spacing[2] }} />
+          <GradientButton title="Create Account" onPress={handleSubmit(onSubmit)} isLoading={isLoading} style={{ marginTop: spacing[2] }} />
 
           <View style={styles.loginRow}>
             <Text style={[textVariants.bodyMedium, { color: theme.colors.textSecondary }]}>Already have an account? </Text>
@@ -121,4 +142,5 @@ const styles = StyleSheet.create({
   backBtn: { width: 40, height: 40, borderRadius: borderRadius.xl, alignItems: 'center', justifyContent: 'center' },
   form: { padding: spacing[6], paddingTop: spacing[5] },
   loginRow: { flexDirection: 'row', justifyContent: 'center', marginTop: spacing[6] },
+  errorBanner: { flexDirection: 'row', alignItems: 'center', padding: spacing[3], borderRadius: borderRadius.lg, marginBottom: spacing[4] },
 });

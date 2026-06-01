@@ -9,12 +9,14 @@ import { textVariants } from '@theme/typography';
 import { spacing, borderRadius } from '@theme/spacing';
 import { formatCurrency } from '@utils/format';
 import { GlassCard, AnalyticsChart, AnimatedProgressRing } from '@components/ui/index';
+import { useTranslation } from 'react-i18next';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const TAB_BAR_HEIGHT = Platform.OS === 'ios' ? 82 : 62;
 
 export default function AnalyticsScreen() {
   const { theme, isDark } = useTheme();
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<'payments' | 'distribution'>('payments');
   const { data: monthly, isLoading: monthlyLoading } = useMonthlyAnalytics();
   const { data: distribution, isLoading: distLoading } = useLoanDistribution();
@@ -39,9 +41,9 @@ export default function AnalyticsScreen() {
     : ['#F0F2FF', '#F8F9FF'] as const;
 
   const summaryCards = [
-    { label: 'Total Paid', value: totalPaid, gradient: theme.gradients.primary, icon: 'cash-outline' as const },
-    { label: 'Interest Paid', value: totalInterest, gradient: theme.gradients.danger, icon: 'trending-up-outline' as const },
-    { label: 'Principal Paid', value: totalPrincipal, gradient: theme.gradients.success, icon: 'shield-checkmark-outline' as const },
+    { label: t('analytics.totalPaid'), value: totalPaid, gradient: theme.gradients.primary, icon: 'cash-outline' as const },
+    { label: t('analytics.interestPaid'), value: totalInterest, gradient: theme.gradients.danger, icon: 'trending-up-outline' as const },
+    { label: t('analytics.principalPaid'), value: totalPrincipal, gradient: theme.gradients.success, icon: 'shield-checkmark-outline' as const },
   ];
 
   return (
@@ -54,7 +56,7 @@ export default function AnalyticsScreen() {
       >
         {/* Header */}
         <MotiView from={{ opacity: 0 }} animate={{ opacity: 1 }} style={styles.header}>
-          <Text style={[textVariants.headlineLarge, { color: theme.colors.textPrimary }]}>Analytics</Text>
+          <Text style={[textVariants.headlineLarge, { color: theme.colors.textPrimary }]}>{t('analytics.title')}</Text>
           <Text style={[textVariants.bodySmall, { color: theme.colors.textSecondary }]}>2024 Overview</Text>
         </MotiView>
 
@@ -115,7 +117,7 @@ export default function AnalyticsScreen() {
             <MotiView from={{ opacity: 0 }} animate={{ opacity: 1 }} key="payments">
               <GlassCard style={styles.chartCard}>
                 <Text style={[textVariants.titleLarge, { color: theme.colors.textPrimary, marginBottom: spacing[4] }]}>
-                  Monthly EMI Payments (₹K)
+                  {t('analytics.monthlyPayments')} (₹K)
                 </Text>
                 {!monthlyLoading && barData.length > 0 && (
                   <AnalyticsChart type="bar" data={barData} color="#7C3AED" />
@@ -135,7 +137,7 @@ export default function AnalyticsScreen() {
             <MotiView from={{ opacity: 0 }} animate={{ opacity: 1 }} key="distribution">
               <GlassCard style={styles.chartCard}>
                 <Text style={[textVariants.titleLarge, { color: theme.colors.textPrimary, marginBottom: spacing[4] }]}>
-                  Loan Distribution
+                  {t('analytics.loanDistribution')}
                 </Text>
                 {!distLoading && (distribution ?? []).map((item, i) => (
                   <View key={item.type} style={styles.distRow}>

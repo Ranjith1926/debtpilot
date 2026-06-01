@@ -1,0 +1,221 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  USER
+  ADMIN
+  SUPPORT
+}
+
+enum LoanType {
+  HOME_LOAN
+  PERSONAL_LOAN
+  VEHICLE_LOAN
+  EDUCATION_LOAN
+  BUSINESS_LOAN
+  GOLD_LOAN
+  CREDIT_CARD
+  OTHER
+}
+
+enum LoanStatus {
+  ACTIVE
+  CLOSED
+  OVERDUE
+  DEFAULTED
+  FORECLOSED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  UPI
+  NETBANKING
+  DEBIT_CARD
+  CREDIT_CARD
+  NEFT
+  RTGS
+  CASH
+}
+
+enum NotificationType {
+  EMI_REMINDER
+  PAYMENT_SUCCESS
+  PAYMENT_FAILED
+  OVERDUE_ALERT
+  HEALTH_SCORE_UPDATE
+  SYSTEM
+}
+
+enum Theme {
+  LIGHT
+  DARK
+  SYSTEM
+}
+
+// ─── Models ───────────────────────────────────────────────────────────────────
+
+model User {
+  id             String    @id @default(cuid())
+  firebaseUid    String?   @unique @map("firebase_uid")
+  name           String
+  email          String    @unique
+  phone          String?   @unique
+  passwordHash   String?   @map("password_hash")
+  profileImage   String?   @map("profile_image")
+  language       String    @default("en")
+  theme          Theme     @default(SYSTEM)
+  monthlyIncome  Decimal?  @map("monthly_income") @db.Decimal(15, 2)
+  role           UserRole  @default(USER)
+  isEmailVerified Boolean  @default(false) @map("is_email_verified")
+  isPhoneVerified Boolean  @default(false) @map("is_phone_verified")
+  isActive       Boolean   @default(true) @map("is_active")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  loans          Loan[]
+  notifications  Notification[]
+  analytics      Analytics[]
+  deviceTokens   DeviceToken[]
+  refreshTokens  RefreshToken[]
+
+  @@map("users")
+}
+
+model Loan {
+  id                 String     @id @default(cuid())
+  userId             String     @map("user_id")
+  loanType           LoanType   @map("loan_type")
+  lenderName         String     @map("lender_name")
+  accountNumber      String?    @map("account_number")
+  totalAmount        Decimal    @map("total_amount") @db.Decimal(15, 2)
+  interestRate       Decimal    @map("interest_rate") @db.Decimal(6, 4)
+  tenureMonths       Int        @map("tenure_months")
+  emiAmount          Decimal    @map("emi_amount") @db.Decimal(15, 2)
+  outstandingBalance Decimal    @map("outstanding_balance") @db.Decimal(15, 2)
+  disbursedAt        DateTime?  @map("disbursed_at")
+  dueDate            Int        @map("due_date")
+  nextDueDate        DateTime?  @map("next_due_date")
+  closureDate        DateTime?  @map("closure_date")
+  status             LoanStatus @default(ACTIVE)
+  notes              String?
+  createdAt          DateTime   @default(now()) @map("created_at")
+  updatedAt          DateTime   @updatedAt @map("updated_at")
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payments Payment[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([nextDueDate])
+  @@map("loans")
+}
+
+model Payment {
+  id            String        @id @default(cuid())
+  loanId        String        @map("loan_id")
+  amount        Decimal       @db.Decimal(15, 2)
+  principalPaid Decimal       @default(0) @map("principal_paid") @db.Decimal(15, 2)
+  interestPaid  Decimal       @default(0) @map("interest_paid") @db.Decimal(15, 2)
+  paymentDate   DateTime      @map("payment_date")
+  dueDate       DateTime?     @map("due_date")
+  method        PaymentMethod @default(UPI)
+  status        PaymentStatus @default(PENDING)
+  transactionId String?       @unique @map("transaction_id")
+  receiptUrl    String?       @map("receipt_url")
+  notes         String?
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  loan Loan @relation(fields: [loanId], references: [id], onDelete: Cascade)
+
+  @@index([loanId])
+  @@index([status])
+  @@index([paymentDate])
+  @@map("payments")
+}
+
+model Notification {
+  id         String           @id @default(cuid())
+  userId     String           @map("user_id")
+  title      String
+  body       String
+  type       NotificationType
+  data       Json?
+  readStatus Boolean          @default(false) @map("read_status")
+  sentAt     DateTime?        @map("sent_at")
+  createdAt  DateTime         @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([readStatus])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+model Analytics {
+  id              String   @id @default(cuid())
+  userId          String   @map("user_id")
+  month           Int
+  year            Int
+  totalLoans      Int      @default(0) @map("total_loans")
+  activeLoans     Int      @default(0) @map("active_loans")
+  monthlyEmi      Decimal  @map("monthly_emi") @db.Decimal(15, 2)
+  totalOutstanding Decimal @map("total_outstanding") @db.Decimal(15, 2)
+  totalPaid       Decimal  @default(0) @map("total_paid") @db.Decimal(15, 2)
+  healthScore     Int      @map("health_score")
+  debtToIncome    Decimal? @map("debt_to_income") @db.Decimal(5, 4)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, month, year])
+  @@index([userId])
+  @@map("analytics")
+}
+
+model DeviceToken {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  token     String   @unique
+  platform  String
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("device_tokens")
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  token     String   @unique
+  expiresAt DateTime @map("expires_at")
+  isRevoked Boolean  @default(false) @map("is_revoked")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@map("refresh_tokens")
+}

@@ -1,38 +1,50 @@
-import { MockAPI } from '@api/mock.client';
+import { apiClient } from '@api/axios.client';
 import { StorageService } from './storage.service';
 import { STORAGE_KEYS } from '@constants/app.constants';
-import { LoginPayload, RegisterPayload, OTPPayload } from '@/types/user.types';
+import { LoginPayload, RegisterPayload } from '@/types/user.types';
+import { ENDPOINTS } from '@constants/endpoints';
+
+// Backend returns { user, tokens: { accessToken, refreshToken } }
+async function saveSession(data: { user: unknown; tokens: { accessToken: string; refreshToken: string } }) {
+  const { user, tokens } = data;
+  await Promise.all([
+    StorageService.setSecure(STORAGE_KEYS.ACCESS_TOKEN, tokens.accessToken),
+    StorageService.setSecure(STORAGE_KEYS.REFRESH_TOKEN, tokens.refreshToken),
+    StorageService.set(STORAGE_KEYS.USER_DATA, user),
+  ]);
+}
 
 export class AuthService {
   static async login(payload: LoginPayload) {
-    const response = await MockAPI.auth.login(payload.phone, payload.password);
-    const { user, accessToken, refreshToken } = response.data;
-    await Promise.all([
-      StorageService.setSecure(STORAGE_KEYS.ACCESS_TOKEN, accessToken),
-      StorageService.setSecure(STORAGE_KEYS.REFRESH_TOKEN, refreshToken),
-      StorageService.set(STORAGE_KEYS.USER_DATA, user),
-    ]);
-    return response.data;
+    const response = await apiClient.post(ENDPOINTS.AUTH.LOGIN, {
+      email: payload.email,
+      password: payload.password,
+    });
+    await saveSession(response.data.data);
+    return response.data.data;
   }
 
   static async register(payload: RegisterPayload) {
-    return MockAPI.auth.register();
-  }
-
-  static async verifyOTP(payload: OTPPayload) {
-    const response = await MockAPI.auth.verifyOTP();
-    const { user, accessToken, refreshToken } = response.data;
-    await Promise.all([
-      StorageService.setSecure(STORAGE_KEYS.ACCESS_TOKEN, accessToken),
-      StorageService.setSecure(STORAGE_KEYS.REFRESH_TOKEN, refreshToken),
-      StorageService.set(STORAGE_KEYS.USER_DATA, user),
-    ]);
-    return response.data;
+    const response = await apiClient.post(ENDPOINTS.AUTH.REGISTER, {
+      name: payload.name,
+      email: payload.email,
+      phone: payload.phone,
+      password: payload.password,
+    });
+    await saveSession(response.data.data);
+    return response.data.data;
   }
 
   static async logout() {
-    await StorageService.clearSecure();
-    await StorageService.remove(STORAGE_KEYS.USER_DATA);
+    try {
+      const refreshToken = await StorageService.getSecure(STORAGE_KEYS.REFRESH_TOKEN);
+      await apiClient.post(ENDPOINTS.AUTH.LOGOUT, { refreshToken });
+    } catch {
+      // Always clear locally even if server call fails
+    } finally {
+      await StorageService.clearSecure();
+      await StorageService.remove(STORAGE_KEYS.USER_DATA);
+    }
   }
 
   static async getStoredUser() {

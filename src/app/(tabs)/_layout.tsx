@@ -7,6 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '@theme/ThemeProvider';
 import { textVariants } from '@theme/typography';
 import { borderRadius } from '@theme/spacing';
+import { useTranslation } from 'react-i18next';
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
@@ -48,6 +49,7 @@ const TabIcon = ({ name, outlineName, focused, label }: TabIconProps) => {
 
 export default function TabsLayout() {
   const { theme, isDark } = useTheme();
+  const { t } = useTranslation();
 
   const tabBarBg = isDark ? 'rgba(10,10,15,0.97)' : 'rgba(255,255,255,0.97)';
   const borderColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
@@ -86,7 +88,7 @@ export default function TabsLayout() {
         name="dashboard"
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabIcon name="home" outlineName="home-outline" focused={focused} label="Home" />
+            <TabIcon name="home" outlineName="home-outline" focused={focused} label={t('dashboard.title')} />
           ),
         }}
       />
@@ -94,7 +96,7 @@ export default function TabsLayout() {
         name="loans"
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabIcon name="card" outlineName="card-outline" focused={focused} label="Loans" />
+            <TabIcon name="card" outlineName="card-outline" focused={focused} label={t('loans.title')} />
           ),
         }}
       />
@@ -102,7 +104,7 @@ export default function TabsLayout() {
         name="analytics"
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabIcon name="bar-chart" outlineName="bar-chart-outline" focused={focused} label="Analytics" />
+            <TabIcon name="bar-chart" outlineName="bar-chart-outline" focused={focused} label={t('analytics.title')} />
           ),
         }}
       />
@@ -110,7 +112,7 @@ export default function TabsLayout() {
         name="profile"
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabIcon name="person" outlineName="person-outline" focused={focused} label="Profile" />
+            <TabIcon name="person" outlineName="person-outline" focused={focused} label={t('profile.title')} />
           ),
         }}
       />

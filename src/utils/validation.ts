@@ -10,7 +10,8 @@ export const passwordSchema = z
   .string()
   .min(8, 'Password must be at least 8 characters')
   .regex(/[A-Z]/, 'Must contain at least one uppercase letter')
-  .regex(/[0-9]/, 'Must contain at least one number');
+  .regex(/[0-9]/, 'Must contain at least one number')
+  .regex(/[^A-Za-z0-9]/, 'Must contain at least one special character');
 
 export const otpSchema = z
   .string()
@@ -18,7 +19,7 @@ export const otpSchema = z
   .regex(/^\d{6}$/, 'OTP must contain only digits');
 
 export const loginSchema = z.object({
-  phone: phoneSchema,
+  email: z.string().email('Enter a valid email address'),
   password: passwordSchema,
 });
 

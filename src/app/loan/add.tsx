@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -17,6 +17,34 @@ import { LOAN_TYPE_LABELS } from '@constants/app.constants';
 import { LoanType } from '@/types/loan.types';
 
 const LOAN_TYPES: LoanType[] = ['home', 'car', 'personal', 'education', 'business', 'gold', 'credit_card'];
+
+// Keeps the raw string while typing so "8." isn't stripped to "8" mid-entry
+function NumericInput({ value, onChange, onBlur, decimal = false, ...rest }: {
+  value: number | undefined;
+  onChange: (n: number) => void;
+  onBlur: () => void;
+  decimal?: boolean;
+  [key: string]: unknown;
+}) {
+  const [text, setText] = useState(value != null && value !== 0 ? String(value) : '');
+  return (
+    <CustomInput
+      {...rest}
+      keyboardType={decimal ? 'decimal-pad' : 'numeric'}
+      value={text}
+      onChangeText={(t: string) => {
+        setText(t);
+        const n = parseFloat(t);
+        if (!isNaN(n)) onChange(n);
+      }}
+      onBlur={() => {
+        const n = parseFloat(text);
+        if (isNaN(n)) { setText(''); } else { setText(String(n)); onChange(n); }
+        onBlur();
+      }}
+    />
+  );
+}
 
 export default function AddLoanScreen() {
   const { theme, isDark } = useTheme();
@@ -87,8 +115,8 @@ export default function AddLoanScreen() {
             {/* Principal Amount */}
             <Controller control={control} name="principalAmount"
               render={({ field: { onChange, value, onBlur } }) => (
-                <CustomInput label="Loan Amount (₹)" placeholder="e.g. 500000" leftIcon="cash-outline" keyboardType="numeric"
-                  value={value?.toString()} onChangeText={(t) => onChange(Number(t))} onBlur={onBlur} error={errors.principalAmount?.message} isRequired />
+                <NumericInput label="Loan Amount (₹)" placeholder="e.g. 500000" leftIcon="cash-outline"
+                  value={value} onChange={onChange} onBlur={onBlur} error={errors.principalAmount?.message} isRequired />
               )}
             />
 
@@ -96,16 +124,16 @@ export default function AddLoanScreen() {
               {/* Interest Rate */}
               <Controller control={control} name="interestRate"
                 render={({ field: { onChange, value, onBlur } }) => (
-                  <CustomInput label="Interest Rate (%)" placeholder="8.5" leftIcon="trending-up-outline" keyboardType="decimal-pad"
-                    value={value?.toString()} onChangeText={(t) => onChange(Number(t))} onBlur={onBlur} error={errors.interestRate?.message}
+                  <NumericInput label="Interest Rate (%)" placeholder="8.5" leftIcon="trending-up-outline" decimal
+                    value={value} onChange={onChange} onBlur={onBlur} error={errors.interestRate?.message}
                     containerStyle={{ flex: 1, marginRight: spacing[2] }} isRequired />
                 )}
               />
               {/* Tenure */}
               <Controller control={control} name="tenureMonths"
                 render={({ field: { onChange, value, onBlur } }) => (
-                  <CustomInput label="Tenure (Months)" placeholder="60" leftIcon="time-outline" keyboardType="numeric"
-                    value={value?.toString()} onChangeText={(t) => onChange(Number(t))} onBlur={onBlur} error={errors.tenureMonths?.message}
+                  <NumericInput label="Tenure (Months)" placeholder="60" leftIcon="time-outline"
+                    value={value} onChange={onChange} onBlur={onBlur} error={errors.tenureMonths?.message}
                     containerStyle={{ flex: 1, marginLeft: spacing[2] }} isRequired />
                 )}
               />

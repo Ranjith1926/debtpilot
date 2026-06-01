@@ -97,6 +97,54 @@
     "principalAmount": "मूल राशि",
     "months": "महीने"
   },
+  "analytics": {
+    "title": "विश्लेषण",
+    "monthlyPayments": "मासिक भुगतान",
+    "loanDistribution": "ऋण वितरण",
+    "principalVsInterest": "मूल बनाम ब्याज",
+    "totalPaid": "कुल भुगतान",
+    "interestPaid": "ब्याज भुगतान",
+    "principalPaid": "मूल भुगतान"
+  },
+  "insights": {
+    "title": "AI अंतर्दृष्टि",
+    "unread": "अपठित",
+    "markAllRead": "सभी पढ़े हुए के रूप में चिह्नित करें"
+  },
+  "reminders": {
+    "title": "रिमाइंडर",
+    "addReminder": "रिमाइंडर जोड़ें",
+    "active": "सक्रिय",
+    "inactive": "निष्क्रिय"
+  },
+  "profile": {
+    "title": "प्रोफ़ाइल",
+    "creditScore": "क्रेडिट स्कोर",
+    "editProfile": "प्रोफ़ाइल संपादित करें",
+    "kycStatus": "KYC स्थिति",
+    "verified": "सत्यापित",
+    "pending": "लंबित",
+    "settings": "सेटिंग्स",
+    "language": "भाषा",
+    "theme": "थीम",
+    "darkMode": "डार्क मोड",
+    "biometric": "बायोमेट्रिक लॉगिन",
+    "notifications": "सूचनाएं",
+    "logout": "लॉगआउट",
+    "deleteAccount": "खाता हटाएं",
+    "appVersion": "ऐप संस्करण"
+  },
+  "settings": {
+    "title": "सेटिंग्स",
+    "account": "खाता",
+    "security": "सुरक्षा",
+    "preferences": "प्राथमिकताएं",
+    "support": "सहायता",
+    "changePassword": "पासवर्ड बदलें",
+    "helpCenter": "सहायता केंद्र",
+    "contactSupport": "सहायता से संपर्क करें",
+    "rateApp": "ऐप को रेट करें"
+  },
   "loanTypes": {
     "home": "गृह ऋण",
     "car": "कार ऋण",

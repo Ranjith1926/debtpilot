@@ -29,7 +29,7 @@ const EMIListCard = memo<EMIListCardProps>(({ emi, onPress, onPayPress, index = 
   const { theme } = useTheme();
   const daysLeft = daysUntil(emi.dueDate);
   const typeColor = getLoanTypeColor(emi.loanType);
-  const status = statusConfig[emi.status];
+  const status = statusConfig[emi.status] ?? statusConfig.upcoming;
   const icon = LOAN_TYPE_ICONS[emi.loanType] as keyof typeof Ionicons.glyphMap ?? 'card';
 
   return (

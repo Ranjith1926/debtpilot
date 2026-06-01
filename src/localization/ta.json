@@ -54,7 +54,7 @@
     "signIn": "ஏற்கெனவே கணக்கு உள்ளதா? உள்நுழையவும்"
   },
   "dashboard": {
-    "title": "டாஷ்போர்டு",
+    "title": "முகப்பு",
     "greeting": "வணக்கம்",
     "morning": "காலை",
     "afternoon": "மதியம்",
@@ -96,6 +96,54 @@
     "loanType": "கடன் வகை",
     "principalAmount": "அசல் தொகை",
     "months": "மாதங்கள்"
+  },
+  "analytics": {
+    "title": "பகுப்பாய்வு",
+    "monthlyPayments": "மாதாந்திர கட்டணங்கள்",
+    "loanDistribution": "கடன் விநியோகம்",
+    "principalVsInterest": "அசல் மற்றும் வட்டி",
+    "totalPaid": "மொத்தம் செலுத்தப்பட்டது",
+    "interestPaid": "வட்டி செலுத்தப்பட்டது",
+    "principalPaid": "அசல் செலுத்தப்பட்டது"
+  },
+  "insights": {
+    "title": "AI நுண்ணறிவுகள்",
+    "unread": "படிக்காதது",
+    "markAllRead": "அனைத்தையும் படித்ததாக குறி"
+  },
+  "reminders": {
+    "title": "நினைவூட்டல்கள்",
+    "addReminder": "நினைவூட்டல் சேர்",
+    "active": "செயல்பாட்டில்",
+    "inactive": "செயல்பாட்டில் இல்லை"
+  },
+  "profile": {
+    "title": "சுயவிவரம்",
+    "creditScore": "கடன் மதிப்பெண்",
+    "editProfile": "சுயவிவரத்தை திருத்து",
+    "kycStatus": "KYC நிலை",
+    "verified": "சரிபார்க்கப்பட்டது",
+    "pending": "நிலுவையில் உள்ளது",
+    "settings": "அமைப்புகள்",
+    "language": "மொழி",
+    "theme": "தீம்",
+    "darkMode": "இருள் பயன்முறை",
+    "biometric": "பயோமெட்ரிக் உள்நுழைவு",
+    "notifications": "அறிவிப்புகள்",
+    "logout": "வெளியேறு",
+    "deleteAccount": "கணக்கை நீக்கு",
+    "appVersion": "பயன்பாட்டு பதிப்பு"
+  },
+  "settings": {
+    "title": "அமைப்புகள்",
+    "account": "கணக்கு",
+    "security": "பாதுகாப்பு",
+    "preferences": "விருப்பங்கள்",
+    "support": "ஆதரவு",
+    "changePassword": "கடவுச்சொல்லை மாற்று",
+    "helpCenter": "உதவி மையம்",
+    "contactSupport": "ஆதரவை தொடர்பு கொள்",
+    "rateApp": "பயன்பாட்டை மதிப்பிடு"
   },
   "loanTypes": {
     "home": "வீட்டு கடன்",
