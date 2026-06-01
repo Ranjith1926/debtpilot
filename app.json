@@ -56,6 +56,13 @@
     "experiments": {
       "typedRoutes": true
     },
-    "newArchEnabled": true
+    "newArchEnabled": true,
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b29ffa35-190e-415e-8b9a-7b62b4be4d5e"
+      }
+    },
+    "owner": "ranjithreo1926"
   }
 }
