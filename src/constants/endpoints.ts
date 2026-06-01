@@ -1,0 +1,57 @@
+export const ENDPOINTS = {
+  AUTH: {
+    LOGIN: '/auth/login',
+    REGISTER: '/auth/register',
+    VERIFY_OTP: '/auth/verify-otp',
+    RESEND_OTP: '/auth/resend-otp',
+    REFRESH_TOKEN: '/auth/refresh',
+    LOGOUT: '/auth/logout',
+    FORGOT_PASSWORD: '/auth/forgot-password',
+    RESET_PASSWORD: '/auth/reset-password',
+  },
+  USER: {
+    ME: '/user/me',
+    UPDATE_PROFILE: '/user/profile',
+    UPDATE_PREFERENCES: '/user/preferences',
+    UPLOAD_AVATAR: '/user/avatar',
+    DELETE_ACCOUNT: '/user/delete',
+  },
+  LOANS: {
+    LIST: '/loans',
+    CREATE: '/loans',
+    DETAIL: (id: string) => `/loans/${id}`,
+    UPDATE: (id: string) => `/loans/${id}`,
+    DELETE: (id: string) => `/loans/${id}`,
+    SUMMARY: '/loans/summary',
+    AMORTIZATION: (id: string) => `/loans/${id}/amortization`,
+  },
+  EMIS: {
+    LIST: '/emis',
+    UPCOMING: '/emis/upcoming',
+    CALENDAR: '/emis/calendar',
+    MARK_PAID: (id: string) => `/emis/${id}/pay`,
+    HISTORY: '/emis/history',
+  },
+  ANALYTICS: {
+    OVERVIEW: '/analytics/overview',
+    MONTHLY: '/analytics/monthly',
+    DISTRIBUTION: '/analytics/distribution',
+    HEALTH_SCORE: '/analytics/health-score',
+  },
+  INSIGHTS: {
+    LIST: '/insights',
+    MARK_READ: (id: string) => `/insights/${id}/read`,
+  },
+  REMINDERS: {
+    LIST: '/reminders',
+    CREATE: '/reminders',
+    UPDATE: (id: string) => `/reminders/${id}`,
+    DELETE: (id: string) => `/reminders/${id}`,
+  },
+  NOTIFICATIONS: {
+    LIST: '/notifications',
+    MARK_READ: (id: string) => `/notifications/${id}/read`,
+    MARK_ALL_READ: '/notifications/read-all',
+    CLEAR: '/notifications/clear',
+  },
+} as const;
