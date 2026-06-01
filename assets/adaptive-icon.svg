@@ -1,0 +1,77 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="letterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E0F2FE"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#34D399"/>
+    </linearGradient>
+    <filter id="softShadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feOffset dx="0" dy="4"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.25"/></feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Centered group: DP monogram inside Android adaptive safe zone -->
+  <!-- Safe zone = center 66% of 1024 = 676 wide. Content fits within radius ~336 from center. -->
+  <g transform="translate(170, 310)" filter="url(#softShadow)">
+    <!-- "D" letter -->
+    <path
+      d="M 0 0
+         L 200 0
+         Q 360 0, 360 202
+         Q 360 404, 200 404
+         L 0 404
+         Z
+         M 120 110
+         L 120 294
+         L 185 294
+         Q 230 294, 230 202
+         Q 230 110, 185 110
+         Z"
+      fill="url(#letterGrad)"
+      fill-rule="evenodd"
+    />
+
+    <!-- "P" letter -->
+    <path
+      d="M 400 0
+         L 590 0
+         Q 685 0, 685 130
+         Q 685 260, 590 260
+         L 520 260
+         L 520 404
+         L 400 404
+         Z
+         M 520 110
+         L 565 110
+         Q 595 110, 595 165
+         Q 595 220, 565 220
+         L 520 220
+         Z"
+      fill="url(#letterGrad)"
+      fill-rule="evenodd"
+    />
+  </g>
+
+  <!-- Accent: up-arrow badge (financial growth) — bottom right of safe zone -->
+  <g transform="translate(720, 700)" filter="url(#softShadow)">
+    <circle cx="0" cy="0" r="56" fill="url(#accentGrad)"/>
+    <path
+      d="M -20 14 L 0 -14 L 20 14"
+      stroke="#FFFFFF"
+      stroke-width="9"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      fill="none"
+    />
+    <line x1="0" y1="-14" x2="0" y2="20" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round"/>
+  </g>
+</svg>
