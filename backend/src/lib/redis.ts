@@ -1,10 +1,26 @@
 import { Redis } from '@upstash/redis';
 
-// Upstash HTTP client — stateless, works in Vercel serverless
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_URL || '',
-  token: process.env.UPSTASH_REDIS_REST_TOKEN || process.env.REDIS_PASSWORD || '',
-});
+// Derive REST credentials from the existing REDIS_URL
+// rediss://default:TOKEN@HOST:PORT -> https://HOST + TOKEN
+function parseUpstashCredentials(): { url: string; token: string } {
+  const raw = process.env.REDIS_URL ?? '';
+  const hostMatch = raw.match(/@([^:@]+):\d+/);
+  const tokenMatch = raw.match(/\/\/[^:]+:([^@]+)@/);
+  if (hostMatch && tokenMatch) {
+    return {
+      url: `https://${hostMatch[1]}`,
+      token: tokenMatch[1],
+    };
+  }
+  return {
+    url: process.env.UPSTASH_REDIS_REST_URL ?? '',
+    token: process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.REDIS_PASSWORD ?? '',
+  };
+}
+
+const { url, token } = parseUpstashCredentials();
+
+const redis = new Redis({ url, token });
 
 export { redis };
 
