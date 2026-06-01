@@ -1,33 +1,17 @@
-import Redis from 'ioredis';
-import { env } from '@/config/env';
+import { Redis } from '@upstash/redis';
 
-const globalForRedis = globalThis as unknown as { redis: Redis };
+// Upstash HTTP client — stateless, works in Vercel serverless
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_URL || '',
+  token: process.env.UPSTASH_REDIS_REST_TOKEN || process.env.REDIS_PASSWORD || '',
+});
 
-function createRedisClient(): Redis {
-  const client = new Redis(env.REDIS_URL, {
-    password: env.REDIS_PASSWORD || undefined,
-    retryStrategy: (times) => Math.min(times * 50, 2000),
-    maxRetriesPerRequest: 3,
-    lazyConnect: true,
-  });
-
-  client.on('error', (err) => {
-    if (process.env.NODE_ENV !== 'test') {
-      console.error('[Redis] Connection error:', err.message);
-    }
-  });
-
-  return client;
-}
-
-export const redis = globalForRedis.redis ?? createRedisClient();
-
-if (process.env.NODE_ENV !== 'production') globalForRedis.redis = redis;
+export { redis };
 
 export async function cacheGet<T>(key: string): Promise<T | null> {
   try {
-    const value = await redis.get(key);
-    return value ? (JSON.parse(value) as T) : null;
+    const value = await redis.get<T>(key);
+    return value ?? null;
   } catch {
     return null;
   }
@@ -35,7 +19,7 @@ export async function cacheGet<T>(key: string): Promise<T | null> {
 
 export async function cacheSet(key: string, value: unknown, ttlSeconds = 300): Promise<void> {
   try {
-    await redis.set(key, JSON.stringify(value), 'EX', ttlSeconds);
+    await redis.set(key, value, { ex: ttlSeconds });
   } catch {
     // Cache failure is non-fatal
   }
