@@ -3,18 +3,6 @@
   "buildCommand": "prisma generate && next build",
   "installCommand": "npm install",
   "outputDirectory": ".next",
-  "env": {
-    "DATABASE_URL": "@debtpilot_database_url",
-    "DIRECT_URL": "@debtpilot_direct_url",
-    "REDIS_URL": "@debtpilot_redis_url",
-    "JWT_SECRET": "@debtpilot_jwt_secret",
-    "JWT_REFRESH_SECRET": "@debtpilot_jwt_refresh_secret",
-    "FIREBASE_PROJECT_ID": "@debtpilot_firebase_project_id",
-    "FIREBASE_CLIENT_EMAIL": "@debtpilot_firebase_client_email",
-    "FIREBASE_PRIVATE_KEY": "@debtpilot_firebase_private_key",
-    "ENCRYPTION_KEY": "@debtpilot_encryption_key",
-    "CRON_SECRET": "@debtpilot_cron_secret"
-  },
   "crons": [
     {
       "path": "/api/cron/emi-reminders",
