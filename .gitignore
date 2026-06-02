@@ -28,7 +28,9 @@ backend/node_modules/
 # Secrets
 backend/.env
 backend/.env.local
-google-services.json
+# Note: google-services.json is safe to commit (public Firebase Android config,
+# restricted by package name + SHA1). The Admin SDK private key is what's secret,
+# and that lives in backend/.env (gitignored above).
 
 # Logs
 *.log

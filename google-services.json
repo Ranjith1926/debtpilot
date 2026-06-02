@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "25936983703",
+    "project_id": "debtpilot-1d0ea",
+    "storage_bucket": "debtpilot-1d0ea.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:25936983703:android:b4b150f0ffc711624fdbd2",
+        "android_client_info": {
+          "package_name": "com.debtpilot.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJjAE5yIezSjjMxakbAyoR2G-nixYQ4hU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
